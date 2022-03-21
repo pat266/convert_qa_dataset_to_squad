@@ -15,11 +15,16 @@ import util as UTIL
 Check to see if there is a directory './datasets/triviaqa-rc/'
 """
 def download_dataset_if_needed():
-    if not os.path.exists('./datasets/triviaqa-rc'):
-        download_triviaqa('./datasets')
+    path_dir = './datasets/triviaqa-rc'
+    if not os.path.exists(path_dir):
+        download_triviaqa('./datasets/')
     # Check if the folder has more than 3 GB of data
-    elif UTIL.get_dir_size('./datasets/triviaqa-rc') < UTIL.get_bytes_from_gigabytes(1):
-        download_triviaqa('./datasets')
+    elif UTIL.get_dir_size(path_dir) < UTIL.get_bytes_from_gigabytes(1):
+        print("Deleted all content in %s"%path_dir)
+        # delete all files in the directory
+        for file in os.scandir(path_dir):
+            os.remove(file.path)
+        download_triviaqa('./datasets/')
     else:
         print('TriviaQA-rc has already been downloaded.')
 
@@ -46,11 +51,6 @@ def download_triviaqa(path):
     if not os.path.exists(new_path_to_file):
       # create a new directory
         os.makedirs(new_path_to_file)
-    else:
-        print("Deleted all content in %s"%new_path_to_file)
-        # delete all files in the directory
-        for file in os.scandir(new_path_to_file):
-            os.remove(file.path)
 
     # check if the directory has enough space
     UTIL.check_remaining_space(num_gb=7, path=new_path_to_file)
