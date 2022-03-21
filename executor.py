@@ -4,6 +4,7 @@ import util as UTIL
 import sys
 import os
 import platform
+from pathlib import Path
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco, ubuntudialogue, cnnnews, squad, quasar
@@ -24,11 +25,11 @@ def get_parser():
 def main(args):
     try:
         logging.info('(function {}) Started'.format(main.__name__))
-
+        # create a directory to save the file to
+        Path(args.data_path).mkdir(parents=True, exist_ok=True)
         source_files = UTIL.parse_source_files(args.data_path, args.from_files, logging)
         source_file = source_files['source']
         destination_file = os.path.join(args.data_path, args.from_format.lower() + '_to_' + args.to_format.lower() + '_' + args.to_file_name)
-        
         # TODO: 1) We need to create a interface class to have the same signature for all the formatters in ds_formatter folder.
         # TODO: 2) We need to create a generic approach to convert any type to any type not only any type to squad.
         # TODO: 3) can we have better approach to handle the following if/else scenarios
