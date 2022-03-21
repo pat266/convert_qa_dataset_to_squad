@@ -27,8 +27,11 @@ def get_parser():
 def main(args):
     try:
         logging.info('(function {}) Started'.format(main.__name__))
+        
         # create a directory to save the file to
         Path(args.data_path).mkdir(parents=True, exist_ok=True)
+        Path(args.log_path).mkdir(parents=True, exist_ok=True)
+
         source_files = UTIL.parse_source_files(args.data_path, args.from_files, logging)
         source_file = source_files['source']
         destination_file = os.path.join(args.data_path, args.from_format.lower() + '_to_' + args.to_format.lower() + '_' + args.to_file_name)
