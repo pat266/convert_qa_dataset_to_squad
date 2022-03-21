@@ -30,9 +30,6 @@ def main(args):
 
         # create a directory to save the file to
         Path(args.data_path).mkdir(parents=True, exist_ok=True)
-        if not os.path.exists('./log'):
-            os.makedirs('./log')
-        # Path('./log').mkdir(parents=True, exist_ok=True)
 
         source_files = UTIL.parse_source_files(args.data_path, args.from_files, logging)
         source_file = source_files['source']

@@ -107,6 +107,9 @@ testresult_*
 #datasets
 /data/**
 /datasets/**
+/log/**
 # Exception for the .txt file
-!/data/example.txt
-!/datasets/example.txt
+!/data/README.md
+!/datasets/README.md
+!/log/README.md
+
