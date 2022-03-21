@@ -174,8 +174,9 @@ def get_text(qad, domain, web_dir, wikipedia_dir):
         # Sometimes the windows machine is weird and edit to different name
         if platform.system() == 'Windows':
             temp_name = re.sub('[\/:"*?<>|]', '', qad['Filename'])
-            
-        local_file = os.path.join(web_dir, temp_name) if domain == 'SearchResults' else os.path.join(wikipedia_dir, temp_name)
+            local_file = os.path.join(web_dir, temp_name) if domain == 'SearchResults' else os.path.join(wikipedia_dir, temp_name)
+        else:
+            local_file = os.path.join(web_dir, qad['Filename']) if domain == 'SearchResults' else os.path.join(wikipedia_dir, qad['Filename'])
         if not os.path.exists(local_file):
             raise Exception(os.path.abspath(local_file))
         file_content = UTIL.get_file_contents(local_file, encoding='utf-8')
@@ -183,7 +184,9 @@ def get_text(qad, domain, web_dir, wikipedia_dir):
         # Edit the file name since Windows cannot have certain characters on a file
         if platform.system() == 'Windows':
             temp_name = re.sub('[\/:"*?<>|]', '_', qad['Filename'])
-        local_file = os.path.join(web_dir, temp_name) if domain == 'SearchResults' else os.path.join(wikipedia_dir, temp_name)
+            local_file = os.path.join(web_dir, temp_name) if domain == 'SearchResults' else os.path.join(wikipedia_dir, temp_name)
+        else:
+            local_file = os.path.join(web_dir, qad['Filename']) if domain == 'SearchResults' else os.path.join(wikipedia_dir, qad['Filename'])
         if not os.path.exists(local_file):
             raise Exception(os.path.abspath(local_file))
         file_content = UTIL.get_file_contents(local_file, encoding='utf-8')
