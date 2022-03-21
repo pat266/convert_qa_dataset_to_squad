@@ -5,6 +5,8 @@ import sys
 import os
 import platform
 from pathlib import Path
+import nltk
+nltk.download('punkt')
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco, ubuntudialogue, cnnnews, squad, quasar
