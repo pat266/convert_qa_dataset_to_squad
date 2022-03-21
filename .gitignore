@@ -105,6 +105,8 @@ ENV/
 testresult_*
 
 #datasets
-data/
-triviaqa-rc/*
-datasets/*
+/data/**
+/datasets/**
+# Exception for the .txt file
+!/data/example.txt
+!/datasets/example.txt

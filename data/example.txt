@@ -1,0 +1,1 @@
+directory for the output .json SQuAD file
