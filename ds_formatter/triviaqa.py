@@ -6,9 +6,83 @@ sent_tokenize = nltk.data.load("tokenizers/punkt/english.pickle")
 import sys
 import os
 import platform
+import requests
 import re
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import util as UTIL
+
+"""
+Check to see if there is a directory './datasets/triviaqa-rc/'
+"""
+def download_dataset_if_needed():
+    if not os.path.exists('./datasets/triviaqa-rc'):
+        download_triviaqa('./datasets')
+    # Check if the folder has more than 3 GB of data
+    elif UTIL.get_dir_size('./datasets/triviaqa-rc') < UTIL.get_bytes_from_gigabytes(1):
+        download_triviaqa('./datasets')
+    else:
+        print('TriviaQA-rc has already been downloaded.')
+
+"""
+Download the dataset triviaqa.
+
+path: The destination path to save the compressed and uncompressed files
+"""
+def download_triviaqa(path):
+    # check if the input path exists
+    if not os.path.exists(path):
+        raise Exception("The input path does not exist. Please create it before\
+                        calling the method.")
+    
+    _URL = 'https://nlp.cs.washington.edu/triviaqa/data/triviaqa-rc.tar.gz'
+    # get the name of the file from website
+    _name = _URL.split('/')[-1]
+    # remove extension
+    # only get the name before the extension (cons: file.name.tar.gz = file)
+    stripped_name = _name[:_name.index('.')]
+
+    # combine the original path with the stripped name (w/o extension) of the dataset
+    new_path_to_file = path + stripped_name
+    if not os.path.exists(new_path_to_file):
+      # create a new directory
+        os.makedirs(new_path_to_file)
+    else:
+        print("Deleted all content in %s"%new_path_to_file)
+        # delete all files in the directory
+        for file in os.scandir(new_path_to_file):
+            os.remove(file.path)
+
+    # check if the directory has enough space
+    UTIL.check_remaining_space(num_gb=7, path=new_path_to_file)
+
+    # retrieve and extract the compressed file
+    response = requests.get(_URL, stream = True)
+    # utilize tqdm to display the progress of downloading
+    file_size = int(response.headers['Content-Length'])
+    chunk = 1
+    chunk_size = 1024 * 1024
+    num_bars = int(file_size / chunk_size)
+
+    desc = "Downloading " + _name
+    file_dest = new_path_to_file + '/' + _name # where to write the file to
+
+    # Downloading the file
+    with open(file_dest, 'wb') as fp:
+        for chunk in tqdm(
+                            response.iter_content(chunk_size=chunk_size)
+                            , total= num_bars
+                            , unit='MB'
+                            , desc=desc
+                            , leave=True # progressbar stays
+                        ):
+            fp.write(chunk)
+    
+    # Extract depending on the model
+    UTIL.extract_tar_gz_file(file_dest=file_dest, new_path_to_file=new_path_to_file)
+    
+    # size of the generated folder
+    size = UTIL.get_human_readable_size(UTIL.get_dir_size(new_path_to_file))
+    print("\nFinished downloading. Size of the %s directory: %s"%(new_path_to_file, size))
 
 def convert_to_squad_format(qa_content, wikipedia_dir, web_dir, sample_size, seed, max_num_of_tokens):
     qa_json = read_triviaqa_data(qa_content)

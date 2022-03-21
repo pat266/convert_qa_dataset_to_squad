@@ -1,3 +1,7 @@
+### Note: This is a forked repository. I am editing this based on my need.
+1. Fully support TriviaQA (automatically download, read, and write to the JSON-SQuAD format)\
+
+
 # Dataset Converter for Question-Answering (QA) Tasks 
 Dataset Converter for natural language processing tasks such QA(question-answering) Tasks: from one format to other one
 
@@ -42,12 +46,24 @@ Quasar-S| SQuAD| **completed**
 
 You can find the sample call for each format type in the ``` executor.py ``` file such as below. 
 
+### For TriviaQA (Train)
 ```
-python executor.py 
---log_path="~/log.log" 
---data_path="~/data/" 
---from_files="source:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
---from_format="insuranceqa" 
---to_format="squad" 
---to_file_name="filename.what" # it is gonna be renamed as "[from_to]_filename.what"
+python executor.py \
+--log_path="./log/log.log" \
+--data_path="./data/triviaqa/" \
+--from_files="source:./datasets/triviaqa-rc/qa/wikipedia-train.json, wikipedia:./datasets/triviaqa-rc/evidence/wikipedia,web:./datasets/triviaqa-rc/evidence/web,seed:10,token_size:2000,sample_size:1000000" \
+--from_format="triviaqa" \
+--to_format="squad" \
+--to_file_name="wikipedia-train-long.json"
+```
+
+### For TriviaQA (Validation)
+```
+python executor.py \
+--log_path="./log/log.log" \
+--data_path="./data/triviaqa/" \
+--from_files="source:./datasets/triviaqa-rc/qa/wikipedia-dev.json, wikipedia:./datasets/triviaqa-rc/evidence/wikipedia,web:./datasets/triviaqa-rc/evidence/web,seed:10,token_size:2000,sample_size:1000000" \
+--from_format="triviaqa" \
+--to_format="squad" \
+--to_file_name="wikipedia-dev-long.json"
 ```

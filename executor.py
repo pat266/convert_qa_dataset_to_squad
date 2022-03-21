@@ -28,7 +28,7 @@ def main(args):
         source_files = UTIL.parse_source_files(args.data_path, args.from_files, logging)
         source_file = source_files['source']
         destination_file = os.path.join(args.data_path, args.from_format.lower() + '_to_' + args.to_format.lower() + '_' + args.to_file_name)
-
+        
         # TODO: 1) We need to create a interface class to have the same signature for all the formatters in ds_formatter folder.
         # TODO: 2) We need to create a generic approach to convert any type to any type not only any type to squad.
         # TODO: 3) can we have better approach to handle the following if/else scenarios
@@ -87,7 +87,7 @@ def main(args):
             --to_format="squad" 
             --to_file_name="wikipedia-train-long.json"
             """
-
+            triviaqa.download_dataset_if_needed()
             wiki = source_files['wikipedia']
             web = source_files['web']
             seed = source_files['seed']
@@ -286,7 +286,7 @@ def main(args):
             formatted_content = cnnnews.convert_to_squad(story_question_content, context_content_path)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
         else:
-            pass
+            raise AttributeError("The combination of formats is not supported.")
         logging.info('(function {}) Finished'.format(main.__name__))
     except Exception as e:
         logging.error('(function {}) has an error: {}'.format(main.__name__, e))
